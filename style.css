@@ -1,21 +1,56 @@
 * {
-    font-family:
-        Helvetica Neue,
-        Segoe UI,
-        sans-serif;
+  font-family: Helvetica Neue, Segoe UI, sans-serif;
 }
 
 button,
 input {
-    margin: 3px;
+  margin: 3px;
 }
 
 input[type="text"] {
-    width: 300px;
+  width: 300px;
 }
 
 :checked + input[type="text"] {
-    color: gray;
-    font-style: italic;
-    text-decoration: line-through;
+  color: gray;
+  font-style: italic;
+  text-decoration: line-through;
+}
+
+span.loading img {
+  height: 16px;
+}
+
+.display-none {
+  display: none;
+}
+
+p {
+  margin: 0;
+}
+
+div.message-container {
+  display: flex;
+  flex-direction: column;
+}
+
+div.message {
+  border-radius: 16px;
+  padding: 12px;
+  width: fit-content;
+  margin-bottom: 8px;
+}
+
+div.message.other {
+  background-color: lightgray;
+}
+
+div.message.self {
+  background-color: lightskyblue;
+  justify-self: end;
+}
+
+p.name {
+  font-size: 12px;
+  margin-bottom: 4px;
 }

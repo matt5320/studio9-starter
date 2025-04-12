@@ -1,51 +1,61 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Designftw Chatroom</title>
-        <script type="importmap">
-            {
-                "imports": {
-                    "vue": "https://cdn.jsdelivr.net/npm/vue@3.5.13/dist/vue.esm-browser.js",
-                    "@graffiti-garden/implementation-local": "https://cdn.jsdelivr.net/npm/@graffiti-garden/implementation-local@0.6.4/dist/browser/index.js",
-                    "@graffiti-garden/implementation-remote": "https://cdn.jsdelivr.net/npm/@graffiti-garden/implementation-remote@0.6.2/dist/browser/index.js",
-                    "@graffiti-garden/wrapper-vue": "https://cdn.jsdelivr.net/npm/@graffiti-garden/wrapper-vue@0.7.2/dist/browser/plugin.mjs"
-                }
-            }
-        </script>
-        <link rel="stylesheet" href="style.css" />
-    </head>
-    <body>
-        <div id="app">
-            <h1>DesignFTW Chatroom</h1>
-            <button v-if="!$graffitiSession.value" @click="$graffiti.login()">
-                Log In
-            </button>
-            <template v-else>
-                <button @click="$graffiti.logout($graffitiSession.value)">
-                    Log Out
-                </button>
-                <form @submit.prevent="sendMessage($graffitiSession.value)">
-                    <input
-                        type="text"
-                        v-model="myMessage"
-                        placeholder="Message"
-                    />
-                    <input type="submit" value="Send" />
-                </form>
-            </template>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Designftw Chatroom</title>
+    <script type="importmap">
+      {
+        "imports": {
+          "vue": "https://cdn.jsdelivr.net/npm/vue@3.5.13/dist/vue.esm-browser.js",
+          "@graffiti-garden/implementation-local": "https://cdn.jsdelivr.net/npm/@graffiti-garden/implementation-local@0.6.4/dist/browser/index.js",
+          "@graffiti-garden/implementation-remote": "https://cdn.jsdelivr.net/npm/@graffiti-garden/implementation-remote@0.6.2/dist/browser/index.js",
+          "@graffiti-garden/wrapper-vue": "https://cdn.jsdelivr.net/npm/@graffiti-garden/wrapper-vue@0.7.2/dist/browser/plugin.mjs"
+        }
+      }
+    </script>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="app">
+      <h1>DesignFTW Chatroom</h1>
+      <button v-if="!$graffitiSession.value" @click="$graffiti.login()">
+        Log In
+      </button>
+      <template v-else>
+        <button @click="$graffiti.logout($graffitiSession.value)">
+          Log Out
+        </button>
+        <form
+          @submit.prevent="sendMessage($graffitiSession.value).then(getMessages);"
+        >
+          <input type="text" v-model="myMessage" placeholder="Message" />
+          <input
+            type="submit"
+            :value="sendDisabled ? 'Sending...' : 'Send'"
+            :disabled="myMessage === '' || sendDisabled"
+          />
+          <span class="loading display-none">
+            <img src="./img/loader.svg" alt="loading message" />
+          </span>
+        </form>
+      </template>
 
-            <h2>Messages</h2>
+      <h2>Messages</h2>
 
-            <button @click="getMessages()">Refresh messages</button>
-            <ul>
-                <li v-for="object of messageObjects">
-                    {{ object.value.content }}
-                </li>
-            </ul>
+      <button @click="getMessages()">Refresh messages</button>
+      <div class="message-container">
+        <div v-for="object of messageObjects">
+          <div
+            :class="'message ' + ($graffitiSession.value.actor === object.actor ? 'self' : 'other')"
+          >
+            <p class="name">{{ formatActor(object.actor) }}</p>
+            <p class="content">{{ object.value.content }}</p>
+          </div>
         </div>
+      </div>
+    </div>
 
-        <script src="index.js" type="module"></script>
-    </body>
+    <script src="index.js" type="module"></script>
+  </body>
 </html>
